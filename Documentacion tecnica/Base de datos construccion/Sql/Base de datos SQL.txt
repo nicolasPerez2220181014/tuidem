@@ -1,0 +1,167 @@
+-- Tabla Base
+CREATE TABLE Base (
+    id SERIAL PRIMARY KEY,
+    creation_date TIMESTAMP,
+    company INTEGER,
+    name VARCHAR(255),
+    alive BOOLEAN,
+    created_by INTEGER,
+    lastEditUser INTEGER,
+    owner INTEGER,
+    description TEXT
+);
+
+-- Tabla Person
+CREATE TABLE Person (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    identification VARCHAR(255),
+    movi VARCHAR(255),
+    first_name VARCHAR(255),
+    last_name VARCHAR(255),
+    address VARCHAR(255),
+    country VARCHAR(255),
+    city VARCHAR(255)
+);
+
+-- Tabla Company
+CREATE TABLE Company (
+    id SERIAL PRIMARY KEY,
+    site_url VARCHAR(255),
+    identification VARCHAR(255),
+    business_name VARCHAR(255),
+    email VARCHAR(255),
+    movi VARCHAR(255),
+    altPhone VARCHAR(255)
+);
+
+-- Tabla Vehicle
+CREATE TABLE Vehicle (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    color VARCHAR(50),
+    rut VARCHAR(255),
+    typeVehicle VARCHAR(50),
+    plate VARCHAR(50),
+    insurance BOOLEAN
+);
+
+-- Tabla TypeGeneralUser
+CREATE TABLE TypeGeneralUser (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    rol VARCHAR(50)
+);
+
+-- Tabla UserGeneral
+CREATE TABLE UserGeneral (
+    id SERIAL PRIMARY KEY,
+    password VARCHAR(255),
+    userName VARCHAR(255),
+    email VARCHAR(255),
+    timezone VARCHAR(255),
+    profilePicture VARCHAR(255),
+    typeUser INTEGER REFERENCES TypeGeneralUser(id)
+);
+
+-- Tabla Store
+CREATE TABLE Store (
+    id SERIAL PRIMARY KEY,
+    website_url VARCHAR(255),
+    opening_hours VARCHAR(255),
+    rating DECIMAL(3, 2),
+    category VARCHAR(255),
+    stock_management BOOLEAN,
+    tax VARCHAR(255),
+    shipping_policy TEXT,
+    return_policy TEXT,
+    store_type VARCHAR(50),
+    company INTEGER REFERENCES Company(id),
+    manager INTEGER REFERENCES Person(id)
+);
+
+-- Tabla Product
+CREATE TABLE Product (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    description TEXT,
+    price DECIMAL(10, 2),
+    stock INTEGER,
+    store INTEGER REFERENCES Store(id)
+);
+
+-- Tabla Package
+CREATE TABLE Package (
+    id SERIAL PRIMARY KEY,
+    weight DECIMAL(10, 2),
+    dimensions VARCHAR(255),
+    status VARCHAR(50),
+    delivery_date TIMESTAMP,
+    tracking_number VARCHAR(255),
+    sender INTEGER REFERENCES Person(id),
+    recipient INTEGER REFERENCES Person(id),
+    price DECIMAL(10, 2),
+    deliveryPerson INTEGER REFERENCES UserGeneral(id)
+);
+
+-- Tabla Order
+CREATE TABLE "Order" (
+    id SERIAL PRIMARY KEY,
+    order_date TIMESTAMP,
+    total_price DECIMAL(10, 2),
+    status VARCHAR(50),
+    store INTEGER REFERENCES Store(id),
+    customer INTEGER REFERENCES Person(id),
+    package INTEGER REFERENCES Package(id),
+    deliveryPerson INTEGER REFERENCES UserGeneral(id)
+);
+
+-- Tabla Review
+CREATE TABLE Review (
+    id SERIAL PRIMARY KEY,
+    rating DECIMAL(3, 2),
+    comment TEXT,
+    store INTEGER REFERENCES Store(id),
+    product INTEGER REFERENCES Product(id),
+    customer INTEGER REFERENCES Person(id)
+);
+
+-- Tabla Payment
+CREATE TABLE Payment (
+    id SERIAL PRIMARY KEY,
+    payment_date TIMESTAMP,
+    amount DECIMAL(10, 2),
+    payment_method VARCHAR(50),
+    order_id INTEGER REFERENCES "Order"(id),
+    customer INTEGER REFERENCES Person(id)
+);
+
+-- Tabla UserDeveloper (Delivery)
+CREATE TABLE UserDeveloper (
+    id SERIAL PRIMARY KEY,
+    password VARCHAR(255),
+    userName VARCHAR(255),
+    email VARCHAR(255),
+    timezone VARCHAR(255),
+    profilePicture VARCHAR(255),
+    company INTEGER REFERENCES Company(id),
+    salary DECIMAL(10, 2),
+    road VARCHAR(255),
+    vehicle INTEGER REFERENCES Vehicle(id)
+);
+
+-- Relación Many-to-Many para las pasarelas de pago
+CREATE TABLE PaymentGateway (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255),
+    transaction_fee DECIMAL(5, 2),
+    currency VARCHAR(50),
+    status VARCHAR(50)
+);
+
+-- Relación entre Store y PaymentGateway (many-to-many)
+CREATE TABLE Store_PaymentGateway (
+    store_id INTEGER REFERENCES Store(id),
+    gateway_id INTEGER REFERENCES PaymentGateway(id),
+    PRIMARY KEY (store_id, gateway_id)
+);

@@ -1,0 +1,10 @@
+FROM node:20
+WORKDIR /tuidem
+COPY ./site/package.json /tuidem/
+RUN npm cache clean --force
+RUN npm install
+RUN npm install -g pm2
+EXPOSE 7393
+RUN pm2-runtime start app.js
+# CMD npm start
+CMD ["tail", "-f", "/dev/null"]
