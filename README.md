@@ -4,9 +4,7 @@ Creadores:
 
 - Nicolas Perez
 - Henry Carabali
-- Angelica Arias
-- Daniel Quintero
-- David Hurtado
+  
 
 # Tablero de ideas
 
