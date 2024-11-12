@@ -37,3 +37,4 @@ O'REILLY MEDIA
 .
 
 Estos libros te proporcionarán una visión profunda tanto en la gestión de proyectos como en áreas de marketing, seguridad y calidad en el desarrollo de software. Si deseas más detalles o acceso directo a los libros, puedes buscarlos en plataformas como Amazon o directamente en O'Reilly Media.
+
