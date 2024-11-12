@@ -1,0 +1,14 @@
+{
+  "name": "tienda-angular-frontend",
+  "version": "1.0.0",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "build": "ng build"
+  },
+  "dependencies": {
+    "@angular/core": "^12.2.0",
+    "@angular/cli": "^12.2.0",
+    "rxjs": "^6.6.7"
+  }
+}
