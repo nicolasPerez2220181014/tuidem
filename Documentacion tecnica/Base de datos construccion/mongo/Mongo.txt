@@ -1,0 +1,182 @@
+Esquema de Mongoose para MongoDB:
+1. Esquema para Person:
+js
+Copiar código
+const mongoose = require('mongoose');
+const { Schema } = mongoose;
+
+const personSchema = new Schema({
+    name: { type: String, required: true },
+    identification: { type: String, required: true },
+    movi: { type: String },
+    first_name: { type: String, required: true },
+    last_name: { type: String, required: true },
+    address: { type: String },
+    country: { type: String },
+    city: { type: String }
+});
+
+module.exports = mongoose.model('Person', personSchema);
+2. Esquema para Company:
+js
+Copiar código
+const companySchema = new Schema({
+    site_url: { type: String },
+    identification: { type: String, required: true },
+    business_name: { type: String, required: true },
+    email: { type: String, required: true },
+    movi: { type: String },
+    altPhone: { type: String }
+});
+
+module.exports = mongoose.model('Company', companySchema);
+3. Esquema para Vehicle:
+js
+Copiar código
+const vehicleSchema = new Schema({
+    name: { type: String },
+    color: { type: String },
+    rut: { type: String },
+    typeVehicle: { type: String },
+    plate: { type: String },
+    insurance: { type: Boolean }
+});
+
+module.exports = mongoose.model('Vehicle', vehicleSchema);
+4. Esquema para UserGeneral:
+js
+Copiar código
+const userGeneralSchema = new Schema({
+    password: { type: String, required: true },
+    userName: { type: String, required: true },
+    email: { type: String, required: true },
+    timezone: { type: String },
+    profilePicture: { type: String },
+    typeUser: { type: Schema.Types.ObjectId, ref: 'TypeGeneralUser' }
+});
+
+module.exports = mongoose.model('UserGeneral', userGeneralSchema);
+5. Esquema para Store:
+js
+Copiar código
+const storeSchema = new Schema({
+    website_url: { type: String },
+    opening_hours: { type: String },
+    rating: { type: Number },
+    category: { type: String },
+    stock_management: { type: Boolean },
+    tax: { type: String },
+    shipping_policy: { type: String },
+    return_policy: { type: String },
+    store_type: { type: String },
+    company: { type: Schema.Types.ObjectId, ref: 'Company' },
+    manager: { type: Schema.Types.ObjectId, ref: 'Person' }
+});
+
+module.exports = mongoose.model('Store', storeSchema);
+6. Esquema para Product:
+js
+Copiar código
+const productSchema = new Schema({
+    name: { type: String, required: true },
+    description: { type: String },
+    price: { type: Number, required: true },
+    stock: { type: Number, required: true },
+    store: { type: Schema.Types.ObjectId, ref: 'Store' }
+});
+
+module.exports = mongoose.model('Product', productSchema);
+7. Esquema para Package:
+js
+Copiar código
+const packageSchema = new Schema({
+    weight: { type: Number },
+    dimensions: { type: String },
+    status: { type: String },
+    delivery_date: { type: Date },
+    tracking_number: { type: String },
+    sender: { type: Schema.Types.ObjectId, ref: 'Person' },
+    recipient: { type: Schema.Types.ObjectId, ref: 'Person' },
+    price: { type: Number },
+    deliveryPerson: { type: Schema.Types.ObjectId, ref: 'UserGeneral' }
+});
+
+module.exports = mongoose.model('Package', packageSchema);
+8. Esquema para Order:
+js
+Copiar código
+const orderSchema = new Schema({
+    order_date: { type: Date },
+    total_price: { type: Number },
+    status: { type: String },
+    store: { type: Schema.Types.ObjectId, ref: 'Store' },
+    customer: { type: Schema.Types.ObjectId, ref: 'Person' },
+    package: { type: Schema.Types.ObjectId, ref: 'Package' },
+    deliveryPerson: { type: Schema.Types.ObjectId, ref: 'UserGeneral' }
+});
+
+module.exports = mongoose.model('Order', orderSchema);
+9. Esquema para Review:
+js
+Copiar código
+const reviewSchema = new Schema({
+    rating: { type: Number },
+    comment: { type: String },
+    store: { type: Schema.Types.ObjectId, ref: 'Store' },
+    product: { type: Schema.Types.ObjectId, ref: 'Product' },
+    customer: { type: Schema.Types.ObjectId, ref: 'Person' }
+});
+
+module.exports = mongoose.model('Review', reviewSchema);
+10. Esquema para Payment:
+js
+Copiar código
+const paymentSchema = new Schema({
+    payment_date: { type: Date },
+    amount: { type: Number },
+    payment_method: { type: String },
+    order_id: { type: Schema.Types.ObjectId, ref: 'Order' },
+    customer: { type: Schema.Types.ObjectId, ref: 'Person' }
+});
+
+module.exports = mongoose.model('Payment', paymentSchema);
+11. Esquema para UserDeveloper (Delivery):
+js
+Copiar código
+const userDeveloperSchema = new Schema({
+    password: { type: String, required: true },
+    userName: { type: String, required: true },
+    email: { type: String, required: true },
+    timezone: { type: String },
+    profilePicture: { type: String },
+    company: { type: Schema.Types.ObjectId, ref: 'Company' },
+    salary: { type: Number },
+    road: { type: String },
+    vehicle: { type: Schema.Types.ObjectId, ref: 'Vehicle' }
+});
+
+module.exports = mongoose.model('UserDeveloper', userDeveloperSchema);
+12. Esquema para PaymentGateway:
+js
+Copiar código
+const paymentGatewaySchema = new Schema({
+    name: { type: String, required: true },
+    transaction_fee: { type: Number },
+    currency: { type: String },
+    status: { type: String }
+});
+
+module.exports = mongoose.model('PaymentGateway', paymentGatewaySchema);
+13. Relación Store_PaymentGateway (Many-to-Many):
+js
+Copiar código
+const storePaymentGatewaySchema = new Schema({
+    store_id: { type: Schema.Types.ObjectId, ref: 'Store' },
+    gateway_id: { type: Schema.Types.ObjectId, ref: 'PaymentGateway' }
+});
+
+module.exports = mongoose.model('Store_PaymentGateway', storePaymentGatewaySchema);
+Explicación:
+Esquemas individuales: Cada clase de tu diagrama está representada por un esquema de Mongoose.
+Relaciones: Las relaciones entre documentos se gestionan con ObjectId y el método ref, que es la forma en que MongoDB hace referencia a otros documentos.
+Esquemas flexibles: MongoDB permite esquemas flexibles, lo que significa que no todos los campos son obligatorios.
